@@ -11,15 +11,10 @@ defmodule HALRequest do
 
   defp zoom({:ok, res}, depth), do: {res.headers, zoom_body(res, depth, zoomable?(res)), res.status_code}
 
-  defp zoom_body(response, depth = 1, _zoomable = true) do
-    case Poison.decode(response.body) do
-      {:ok, json} -> json |> embed(response.headers, depth) |> Poison.encode!
-      {:error, _} -> response.body
-    end
-  end
+  defp zoom_body(response, depth = 1, _zoomable = true), do: response.body |> json_decode |> embed(response.headers, depth) |> :jiffy.encode
   defp zoom_body(response, _depth = 1, _zoomable = false), do: response.body
-  defp zoom_body(response, _depth, _zoomable = false), do: response.body |> Poison.decode!
-  defp zoom_body(response, depth, _zoomable = true), do: response.body |> Poison.decode! |> embed(response.headers, depth)
+  defp zoom_body(response, _depth, _zoomable = false), do: response.body |> json_decode
+  defp zoom_body(response, depth, _zoomable = true), do: response.body |> json_decode |> embed(response.headers, depth)
 
   defp embed(body, headers, depth), do: Dict.put(body, "_embedded", get_embeds(body, headers["x-hal-zoom"] |> String.split, depth))
 
@@ -37,4 +32,6 @@ defmodule HALRequest do
   defp process_links(links, el, depth), do: {el, links |> Parallel.map(&(embed_link(&1, depth)))}
 
   defp embed_link(%{"href" => link}, depth), do: elem(zoom("GET", URI.parse(link).path, "", %{}, depth), 1)
+
+  defp json_decode(data), do: :jiffy.decode(data, [:return_maps])
 end

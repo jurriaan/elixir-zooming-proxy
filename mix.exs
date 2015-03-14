@@ -17,8 +17,8 @@ defmodule ElixirProxy.Mixfile do
     [
       { :cowboy, "~> 1.0.0" },
       { :httpoison, "~> 0.6"},
-      { :poison, "~> 1.3.1" },
-      { :plug, "~> 0.11.1" }
+      { :plug, "~> 0.11.1" },
+      { :jiffy, github: "davisp/jiffy" }
     ]
   end
 end
