@@ -4,7 +4,7 @@
   "httpoison": {:hex, :httpoison, "0.6.2", "a1e95f5b00b0a17b5793a288e121e61399864a8779dbbc3aeda7580e0043d2b0", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, optional: false]}]},
   "httpotion": {:hex, :httpotion, "3.0.1", "6165e7fe4052dfeadd4b480e4ed6619975242ac91d577e4868af92613f9e99df", [:mix], [{:ibrowse, "~> 4.2", [hex: :ibrowse, optional: false]}]},
   "ibrowse": {:hex, :ibrowse, "4.2.2", "b32b5bafcc77b7277eff030ed32e1acc3f610c64e9f6aea19822abcadf681b4b", [:rebar3], []},
-  "idna": {:hex, :idna, "1.0.2", "397e3d001c002319da75759b0a81156bf11849c71d565162436d50020cb7265e", [:make], []},
+  "idna": {:hex, :idna, "2.0.0", "13dc2c407f16ff24648af98f529cec5b957e2fafa849df11d52d82e11529c4c1", [:rebar3], []},
   "jiffy": {:git, "https://github.com/davisp/jiffy.git", "4c0bfbc0fa0de12dcc4ff263888eeaa431ae6ed2", []},
   "mime": {:hex, :mime, "1.0.1", "05c393850524767d13a53627df71beeebb016205eb43bfbd92d14d24ec7a1b51", [:mix], []},
   "plug": {:hex, :plug, "1.2.0", "496bef96634a49d7803ab2671482f0c5ce9ce0b7b9bc25bc0ae8e09859dd2004", [:mix], [{:cowboy, "~> 1.0", [hex: :cowboy, optional: true]}, {:mime, "~> 1.0", [hex: :mime, optional: false]}]},

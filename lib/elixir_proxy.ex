@@ -15,28 +15,26 @@ defmodule ElixirProxy do
 
   def call(conn, _opts) do
     {:ok, req_body, conn} = Plug.Conn.read_body(conn)
-    {headers, body, status_code} = HALRequest.zoom(conn.method, path(conn), req_body, conn.req_headers)
-    %{conn | resp_headers: headers.hdrs |> prepare_headers(conn)}
+    method = conn.method |> String.downcase |> String.to_atom
+    {headers, body, status_code} = HALRequest.zoom(method, path(conn), req_body, conn.req_headers)
+    %{conn | resp_headers: headers |> prepare_headers(conn)}
     |> send_resp(status_code, body)
   end
 
-  defp prepare_location(headers, url, conn) do
+  defp prepare_location(url, conn) do
     {_, host} = conn.req_headers |> List.keyfind("host", 0)
-    headers |> Dict.put("location", to_string(conn.scheme) <> "://" <> host <> URI.parse(url).path)
+    {"location", to_string(conn.scheme) <> "://" <> host <> URI.parse(url).path}
   end
 
   defp prepare_headers(headers, conn) do
     headers
-    |> Enum.map(fn({k,v}) -> {k |> Atom.to_string, v} end)
-    |> Enum.into(%{})
-    |> fix_redirect(conn)
-    |> Dict.put("x-hal-zoomed", "1")
-    |> Dict.drop(@forbidden_headers)
-    |> Dict.to_list
+    |> Map.drop(@forbidden_headers)
+    |> Map.put("x-hal-zoomed", "1")
+    |> Enum.map(fn(kv) -> fix_redirect(kv, conn) end)
   end
 
-  defp fix_redirect(%{"location" => loc} = headers, conn), do: headers |> prepare_location(loc, conn)
-  defp fix_redirect(headers, _), do: headers
+  defp fix_redirect({"location", url}, conn), do: prepare_location(url, conn)
+  defp fix_redirect(header, _), do: header
 
   defp path(conn) do
     base = "/" <> Enum.join(conn.path_info, "/")
