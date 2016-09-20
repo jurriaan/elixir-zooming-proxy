@@ -24,3 +24,4 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+config :ibrowse, default_max_sessions: 150, default_max_pipeline_size: 10

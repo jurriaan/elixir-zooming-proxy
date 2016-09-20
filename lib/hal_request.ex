@@ -1,15 +1,16 @@
 defmodule HALRequest do
-  use HTTPoison.Base
+  use HTTPotion.Base
 
   def process_url(url), do: "http://localhost:1234" <> url
 
   def process_headers(headers), do: Enum.reduce(headers, %{}, fn({k,v}, dict) -> Dict.put(dict, String.downcase(k), v) end)
 
-  def zoom(method, url, body, headers \\ %{}, depth \\ 0), do: request(method, url, body, headers) |> zoom(depth + 1)
+  def zoom(method, url, body, headers \\ %{}, depth \\ 0) do
+    request(method |> String.downcase |> String.to_atom, url, [headers: headers]) |> zoom(depth + 1)
+  end
+  defp zoomable?(res), do: !!res.headers["x-hal-zoom"] && String.contains?(res.headers["content-type"], "json")
 
-  defp zoomable?(res), do: Dict.has_key?(res.headers, "x-hal-zoom") && String.contains?(res.headers["content-type"], "json")
-
-  defp zoom({:ok, res}, depth), do: {res.headers, zoom_body(res, depth, zoomable?(res)), res.status_code}
+  defp zoom(res = %HTTPotion.Response{}, depth), do: {res.headers, zoom_body(res, depth, zoomable?(res)), res.status_code}
 
   defp zoom_body(response, depth = 1, _zoomable = true), do: response.body |> json_decode |> embed(response.headers, depth) |> :jiffy.encode
   defp zoom_body(response, _depth = 1, _zoomable = false), do: response.body

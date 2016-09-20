@@ -3,21 +3,21 @@ defmodule ElixirProxy.Mixfile do
 
   def project do
     [app: :elixir_proxy,
-     version: "0.0.1",
-     elixir: "~> 1.1-dev",
+     version: "0.0.2",
+     elixir: "~> 1.3",
      deps: deps]
   end
 
   def application do
     [mod: { ElixirProxy, [] },
-    applications: [:cowboy, :ranch, :httpoison, :plug]]
+    applications: [:cowboy, :ranch, :httpotion, :plug]]
   end
 
   defp deps do
     [
-      { :cowboy, "~> 1.0.0" },
-      { :httpoison, "~> 0.6"},
-      { :plug, "~> 0.11.1" },
+      { :cowboy, "~> 1.0" },
+      { :httpotion, "~> 3.0.1"},
+      { :plug, "~> 1.2.0" },
       { :jiffy, github: "davisp/jiffy" }
     ]
   end
